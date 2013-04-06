@@ -1,0 +1,32 @@
+.stuk, .titel, .rollen, .rol, .acte, .scene, .actie, .claus, .regel, .anno
+  { font-family: "comic sans ms",verdana,arial,sans-serif;  display: block;  }
+.actie
+ {  font-style: italic; }
+.spreker:after
+ {  content: ": ";  white-space: pre; }
+.spreker
+ {  float: left; width: 15%;  font-weight: bold;  text-transform: capitalize; }
+.spraak
+ {  float: left; width: 85% }
+.stuk
+ {  font-size: 14px;  margin: 2em; }
+.titel
+ {  margin: 0.7em 0 0.2em 0; }
+.stuk .titel
+ {  color: maroon;  font-size: 1.3em; }
+.rollen .titel
+ {  color: maroon;  font-size: 1.2em; }
+.anno
+  {  margin-top: 80; text-align: right; }
+.scene
+  {  margin-top: 2em }
+.scene .titel
+ {  color: maroon;  font-size: 1em; margin-left: 15% }
+.scene .actie
+ { margin-top: 1em; margin-bottom: 1em; }
+.rol
+ {  margin-left: 1em; }
+.claus
+ {  margin-top: 0; }
+.spraak .actie
+ {  margin-left: 3em; }
