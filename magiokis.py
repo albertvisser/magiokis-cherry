@@ -4,6 +4,7 @@ import cherrypy
 import os
 import sys
 import shutil
+import io
 import xml.etree.ElementTree as et
 
 MAGIOKIS_TOP = '/home/albert/magiokis'
@@ -54,10 +55,9 @@ class Page(object):
     def header(self):
         width_data = [71,66,64,68,75,83,86,74,76,76]
         lines = [
-            '<?xml version="1.0" encoding="iso-8859-1"?>',
-            '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" '
-                '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            '<!DOCTYPE html>',
             '<html><head><title>{}_{}</title>'.format(self.section, self.subsection),
+            '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />',
             '<link href="/style/magiokis.css" rel="stylesheet" type="text/css" />',
             ]
         if self.section in SECTIONS[0:4]:
@@ -125,7 +125,11 @@ class Page(object):
         data = self.header()
         data.extend(self.navbar())
         data.append('<div id="right" class="maxhi">')
-        with open(fn) as f_in:
+        if sys.version < '3':
+            f_in = io.TextWrapper(open(fn), encoding='utf-8')
+        else:
+            f_in = open(fn, encoding='utf-8')
+        with f_in:
             for line in f_in:
                 data.append(line)
         data.append('</div>')
@@ -166,7 +170,7 @@ class OldWhoresPage(Page):
                     x.tekst),
                 '<table align="center" cellspacing="0" border="0" cellpadding=' \
                     '"4" width="90%">']
-        h = len(x.lijst) / 2
+        h = int(len(x.lijst) / 2)
         if h * 2 < len(x.lijst):
             h = h + 1
         linktekst = '<td width="50%"><a href="/ow/{}/{}/">{}</a></td>'
@@ -483,7 +487,7 @@ class DenkPage(Page):
             tekstnr = int(tekstnr)
         else:
             tekstnr = 0
-        return self.build(x.decode('latin-1') + "\n" for x in denkbank(trefwoord, tekstnr))
+        return self.build(x + "\n" for x in denkbank(trefwoord, tekstnr)) # .decode('latin-1')
     @cherrypy.expose
     def default(self,subject):
         self.subsection = subject
@@ -506,4 +510,4 @@ root = HomePage()
 cherrypy.tree.mount(root, config=os.path.join(HERE, 'magiokis.conf'))
 
 if __name__ == '__main__':
-    cherrypy.quickstart(config=os.path.join(HERE, 'magiokis.conf'))
+    cherrypy.quickstart(config=os.path.join(HERE, 'magiokis_local.conf'))
