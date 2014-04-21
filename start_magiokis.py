@@ -13,9 +13,9 @@ sys.path.insert(0, ROOT)
 from magiokis import HomePage
 
 
-cherrypy.config.update({'environment': 'embedded'})
 
 application = cherrypy.tree.mount(HomePage(), config=os.path.join(ROOT,
     'magiokis.conf'))
-cherrypy.config.update({'engine.autoreload_on': False,
-        })
+cherrypy.config.update({'environment': 'embedded'})
+## cherrypy.config.update({'engine.autoreload_on': False,
+        ## })
