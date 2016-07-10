@@ -7,9 +7,10 @@ import shutil
 import io
 import xml.etree.ElementTree as et
 
-MAGIOKIS_TOP = '/home/albert/magiokis'
-MAGIOKIS_DATA = os.path.join(MAGIOKIS_TOP, 'data')
-MAGIOKIS_ROOT = os.path.join(MAGIOKIS_DATA, "content")
+MAGIOKIS_BASE = '/home/albert/projects/magiokis'
+MAGIOKIS_TOP = os.path.join(MAGIOKIS_BASE, 'main_logic')
+MAGIOKIS_DATA = os.path.join(MAGIOKIS_BASE, 'dml')
+MAGIOKIS_ROOT = "/home/albert/magiokis/data/content"
 
 sys.path.append(MAGIOKIS_TOP)
 from magiokis_page import denkbank
@@ -48,7 +49,16 @@ class HomePage(object):
 
     @cherrypy.expose
     def index(self):
-        return open(os.path.join(PAGES,"index.html")).read()
+        data = []
+        fn = os.path.join(PAGES, "index.html")
+        if sys.version < '3':
+            f_in = io.TextWrapper(open(fn), encoding='utf-8')
+        else:
+            f_in = open(fn, encoding='utf-8')
+        with f_in:
+            for line in f_in:
+                data.append(line)
+        return data
 
 class Page(object):
 
@@ -79,7 +89,7 @@ class Page(object):
                     '/').replace('&tekstnr=', '/') for line in f_in])
         lines.extend([
             '</head><body><div id="navtopbar">',
-            '<img border="0" src="/images/TopBar_{}.gif" '.format(
+            '<img border="0" src="{}/images/TopBar_{}.gif" '.format(STATIC,
                 self.section),
             'width="750" height="40" usemap="#GetAround"  alt="Topbar" />',
             '<map name="GetAround" id="GetAround">',
@@ -134,7 +144,7 @@ class Page(object):
                 data.append(line)
         data.append('</div>')
         data.append(self.footer())
-        return "".join(data).replace('%imagepad', '/images/')
+        return "".join(data).replace('%imagepad', '{}/images/'.format(STATIC))
 
 
 class OldWhoresPage(Page):
