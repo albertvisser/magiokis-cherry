@@ -32,7 +32,7 @@ HERE = os.path.dirname(__file__)
 PAGES = os.path.join(HERE, 'pages')
 SECTIONS = ['OW', 'SpeelMee', 'Speel', 'Zing', 'Vertel',
             'Dicht', 'Act', 'Art', 'Denk', 'Bio']
-STATIC = 'http://local.magiokis.nl'
+STATIC = 'http://original.magiokis.nl'
 
 class HomePage(object):
     def __init__(self):
