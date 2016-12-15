@@ -68,7 +68,8 @@ class Page(object):
             '<!DOCTYPE html>',
             '<html><head><title>{}_{}</title>'.format(self.section, self.subsection),
             '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />',
-            '<link href="/style/magiokis.css" rel="stylesheet" type="text/css" />',
+            '<link href="{}/style/magiokis.css" '
+                'rel="stylesheet" type="text/css" />'.format(STATIC),
             ]
         if self.section in SECTIONS[0:4]:
             lines.append('<link href="{}/style/songtekst_html.css" '

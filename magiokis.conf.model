@@ -6,23 +6,23 @@ log.access_file = "/var/log/nginx/cherrypy.magiokis-access.log"
 log.error_file = "/var/log/nginx/cherrypy.magiokis-error.log"
 
 [/]
-tools.staticdir.root = "/home/albert/projects/magiokis-cherry"
+tools.staticdir.root = "<magiokis-cherry project root>"
 
 [/style/magiokis.css]
 tools.staticfile.on = "True"
-tools.staticfile.filename = "/home/albert/projects/magiokis-cherry/style/magiokis.css"
+tools.staticfile.filename = "<magiokis-cherry project root>/static/magiokis.css"
 
 [/favicon.ico]
 tools.staticfile.on = "True"
-tools.staticfile.filename = "/home/albert/projects/magiokis-cherry/favicon.ico"
+tools.staticfile.filename = "<magiokis-cherry project root>/static/favicon.ico"
 
 [/images]
-tools.staticdir.root = "/home/albert/magiokis/html"
+tools.staticdir.root = "<magiokis project root>/html"
 tools.staticdir.on = "True"
 tools.staticdir.dir = "images"
 
 [/artwork]
-tools.staticdir.root = "/home/albert/magiokis/data"
+tools.staticdir.root = "<magiokis project root>/data"
 tools.staticdir.on = "True"
 tools.staticdir.dir = "artwork"
 

@@ -7,7 +7,7 @@ import cgitb
 cgitb.enable()
 import cherrypy
 
-ROOT = os.path.dirname(os.path.abspath(__file__)) # '/home/albert/www/cherrypy/magiokis/'
+ROOT = os.path.dirname(os.path.abspath(__file__))
 os.chdir(ROOT)
 sys.path.insert(0, ROOT)
 from magiokis import HomePage
