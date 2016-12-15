@@ -8,6 +8,8 @@ syntax: glob
 *log
 *txt
 *ini
+magiokis.conf
+magiokis.local.conf
 pylint*
 *archive.zip
 *tempfile*
