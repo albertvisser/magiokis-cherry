@@ -40,6 +40,9 @@ class HomePage:
     """Class voor de landing page
     """
     def __init__(self):
+        """mogelijke verbetering/versimpeling: moet dit in __init__ of zou het ook
+        als class attributes kunnen?
+        """
         self.ow = OldWhoresPage()
         self.speelmee = SpeelMeePage()
         self.speel = SpeelPage()
@@ -248,7 +251,7 @@ class KrampPage(Page):
         return self.get_flatpage()
 
     @cherrypy.expose
-    def songs(self, song=""):
+    def songs(self, song=''):
         """lijst met Kramp songs
         """
         self.subsection = 'KrampSongs'
@@ -359,14 +362,14 @@ class SpeelPage(Page):
         return self.get_flatpage().replace(' <a href="', ' <a href="song/')
 
     @cherrypy.expose
-    def song(self, song=''):
+    def song(self, song):
         """Pagina met details van een "Best Of" song
         """
         self.subsection = 'BestOf'
         return self.build(make_xspf_opn_page(song))
 
     @cherrypy.expose
-    def fase(self, fase=''):
+    def fase(self, fase):
         """Pagina met een aantal songs uit een bepaalde periode
         """
         fasedict = {'0': "Begin",
@@ -414,7 +417,7 @@ class ZingPage(Page):
         return self.get_flatpage()
 
     @cherrypy.expose
-    def jaar(self, jaar=''):
+    def jaar(self, jaar):
         """Lijst met liedjes geschreven in een bepaald jaar
         """
         try:
@@ -428,17 +431,19 @@ class ZingPage(Page):
             m = ol.MemberList(int(jaar), "jaarseries")
         except ol.common.DataError as meld:
             return self.build(meld)
-        regels = ["<div>%s</div>" % m.tekst]
+        regels = ['<div style="font-size: 0.7em">(let op: bij openen van een link'
+                  ' kan de muziek meteen beginnen te spelen)</div>',
+                  "<div>%s&nbsp;</div>" % m.tekst]
         for x in m.lijst:
             ds = Song(x)
             if ds.found:
-                regels.append('<a href="/zing/tekst/{}">{}</a> ({}) {}<br />'.format(
+                regels.append('<a href="/zing/titel/{}">{}</a> ({}) {}<br />'.format(
                     x, ds.songtitel, ds.datering, ds.commentaar))
         self.subsection = jaar
         return self.build(regels)
 
     @cherrypy.expose
-    def default(self, subsection='tekst', songid=''):
+    def titel(self, songid):
         """default view voor deze sectie: details van een liedje
         """
         self.found = False
@@ -467,7 +472,7 @@ class VertelPage(Page):
         return self.get_flatpage()
 
     @cherrypy.expose
-    def bundel(self, bundel=''):
+    def bundel(self, bundel):
         """Pagina met inhoudsopgave van een verzameling
         """
         dh = Cats("papa")
@@ -492,7 +497,7 @@ class VertelPage(Page):
         return self.build(regels)
 
     @cherrypy.expose
-    def default(self, bundel='', itemid=''):
+    def default(self, bundel, itemid):
         """default view voor deze sectie: een verhaal zelf
         """
         _, path, id_titels = catlijst("papa", bundel)
@@ -545,7 +550,7 @@ class DichtPage(Page):
         return self.get_flatpage()
 
     @cherrypy.expose
-    def default(self, jaar=''):
+    def default(self, jaar):
         """default view voor deze sectie: gedichten uit een bepaald jaar
         """
         infile = '/home/albert/magiokis/data/Dicht_{}.xml'.format(jaar)
@@ -566,7 +571,7 @@ class ActeerPage(Page):
         return self.get_flatpage()
 
     @cherrypy.expose
-    def default(self, play=''):
+    def play(self, play):
         """default view voor deze sectie: tekst van een toneelstuk
         """
         shutil.copyfile('/home/albert/magiokis/data/acteer/{}.html'.format(play),
@@ -648,7 +653,7 @@ class BioPage(Page):
         return self.get_flatpage()
 
     @cherrypy.expose
-    def default(self, subject=''):
+    def subject(self, subject):
         """default view voor deze sectie: korte beschrijving van een fase
         """
         self.subsection = subject
