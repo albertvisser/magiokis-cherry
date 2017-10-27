@@ -1,36 +1,36 @@
 # -*- coding: utf-8 -*-
 """Magiokis implementatie met behulp van CherryPy
 """
-import os
+import pathlib
 import sys
 import shutil
 import io
 ## import xml.etree.ElementTree as et
 import cherrypy
 
-MAGIOKIS_BASE = '/home/albert/projects/magiokis'
-MAGIOKIS_TOP = os.path.join(MAGIOKIS_BASE, 'main_logic')
-MAGIOKIS_DATA = os.path.join(MAGIOKIS_BASE, 'dml')
-MAGIOKIS_ROOT = "/home/albert/magiokis/data/content"
+MAGIOKIS_BASE = pathlib.Path.home() / 'projects/magiokis'
+MAGIOKIS_TOP = MAGIOKIS_BASE / 'main_logic'
+MAGIOKIS_DATA = MAGIOKIS_BASE / 'dml'
+MAGIOKIS_ROOT = pathlib.Path.home() / "magiokis/data/content"
 
-sys.path.append(MAGIOKIS_TOP)
+sys.path.append(str(MAGIOKIS_TOP))
 from magiokis_page import denkbank
-sys.path.append(MAGIOKIS_DATA)
+sys.path.append(str(MAGIOKIS_DATA))
 from pagehandler import make_xspf_objects, make_xspf_opn_page, make_xspf_pl_page
 from pagehandler import make_tekst_page
-sys.path.append(os.path.join(MAGIOKIS_DATA, "songs"))
+sys.path.append(str(MAGIOKIS_DATA / "songs"))
 ## from opname import Opname
 ## from songtekst import Songtekst
 from song import Song
 import objectlists as ol
-sys.path.append(os.path.join(MAGIOKIS_DATA, "vertel"))
+sys.path.append(str(MAGIOKIS_DATA / "vertel"))
 from vertellers import Cats
 from vertel_item import catlijst
-## sys.path.append(os.path.join(MAGIOKIS_DATA, "dicht"))
+## sys.path.append(MAGIOKIS_DATA / "dicht"))
 ## from dicht_trefw import jarenlijst
 
-HERE = os.path.dirname(__file__)
-PAGES = os.path.join(HERE, 'pages')
+HERE = pathlib.Path(__file__).parent
+PAGES = HERE / 'pages'
 SECTIONS = ['OW', 'SpeelMee', 'Speel', 'Zing', 'Vertel',
             'Dicht', 'Act', 'Art', 'Denk', 'Bio']
 STATIC = 'http://original.magiokis.nl'
@@ -59,11 +59,11 @@ class HomePage:
         """view voor de landing page
         """
         data = []
-        fn = os.path.join(PAGES, "index.html")
+        fn = PAGES / "index.html"
         if sys.version < '3':
-            f_in = io.TextWrapper(open(fn), encoding='utf-8')
+            f_in = io.TextWrapper(fn.open(), encoding='utf-8')
         else:
-            f_in = open(fn, encoding='utf-8')
+            f_in = fn.open(encoding='utf-8')
         with f_in:
             for line in f_in:
                 data.append(line)
@@ -96,7 +96,7 @@ class Page:
             lines.append('<link href="{}/style/toneelstuk_html.css" '
                          'rel="stylesheet" type="text/css" />'.format(STATIC))
         elif self.section == SECTIONS[8] and self.subsection == 'select':
-            with open(os.path.join(MAGIOKIS_ROOT, 'Denk', 'functions.js')) as f_in:
+            with (MAGIOKIS_ROOT / 'Denk' / 'functions.js').open() as f_in:
                 lines.extend([line.replace(
                     '%cgipad%cgiprog?section=D', '/d').replace(
                         '&subsection=S', '/s').replace(
@@ -122,11 +122,10 @@ class Page:
         return lines
 
     def navbar(self):
-        """stel de navigatiebar bovenin samen (plaatje met imagemap)
+        """stel de navigatielinks aan de linkerkant in
         """
         lines = ['<div id="left">']
-        with open(os.path.join(PAGES,
-                               "{0}_navbar.html".format(self.section.lower()))) as f_in:
+        with (PAGES / "{}_navbar.html".format(self.section.lower())).open() as f_in:
             for data in f_in:
                 lines.append(data)
         lines.append('</div>')
@@ -152,15 +151,14 @@ class Page:
         """bouw een platte pagina op
         """
         if not fn:
-            fn = os.path.join(MAGIOKIS_ROOT,
-                              self.section, self.subsection + ".html")
+            fn = MAGIOKIS_ROOT / self.section / (self.subsection + ".html")
         data = self.header()
         data.extend(self.navbar())
         data.append('<div id="right" class="maxhi">')
         if sys.version < '3':
-            f_in = io.TextWrapper(open(fn), encoding='utf-8')
+            f_in = io.TextWrapper(fn.open(), encoding='utf-8')
         else:
-            f_in = open(fn, encoding='utf-8')
+            f_in = fn.open(encoding='utf-8')
         with f_in:
             for line in f_in:
                 data.append(line)
@@ -261,10 +259,10 @@ class KrampPage(Page):
 
     @cherrypy.expose
     def opnames(self):
-        """Pagina met Kramp opnmes
+        """Pagina met Kramp opnames
         """
         self.subsection = 'KrampOpnames'
-        fnaam = os.path.join(MAGIOKIS_ROOT, self.section, self.subsection + ".html")
+        fnaam = str(MAGIOKIS_ROOT / self.section / (self.subsection + '.html'))
         return self.build(make_xspf_objects(fnaam))
 
     @cherrypy.expose
@@ -315,7 +313,7 @@ class MetHansPage(Page):
         """Pagina met opnames
         """
         self.subsection = 'HansdOpnames'
-        fnaam = os.path.join(MAGIOKIS_ROOT, self.section, self.subsection + ".html")
+        fnaam = str(MAGIOKIS_ROOT / self.section / (self.subsection + ".html"))
         return self.build(make_xspf_objects(fnaam))
 
 
@@ -345,7 +343,7 @@ class EyePactPage(Page):
         """Pagina met opnames
         """
         self.subsection = 'EyePactOpnames'
-        fnaam = os.path.join(MAGIOKIS_ROOT, self.section, self.subsection + ".html")
+        fnaam = str(MAGIOKIS_ROOT / self.section / (self.subsection + ".html"))
         return self.build(make_xspf_objects(fnaam))
 
 
@@ -378,9 +376,9 @@ class SpeelPage(Page):
                     '3': "Fase3",
                     '4': "Fase4"}
         self.subsection = fasedict[fase]
-        fn = os.path.join(MAGIOKIS_ROOT, self.section, self.subsection + ".html")
+        fnaam = str(MAGIOKIS_ROOT / self.section / (self.subsection + ".html"))
         if fase in ('0', '1', '2', '3'):
-            return self.build(make_xspf_objects(fn))
+            return self.build(make_xspf_objects(fnaam))
         elif fase == '4':
             return self.get_flatpage().replace(
                 '%cgipad%cgiprog?section=S', '/s').replace(
@@ -391,8 +389,8 @@ class SpeelPage(Page):
         """Lijst met electronisch vastgelegde muziekjes
         """
         self.subsection = 'Modules'
-        fn = os.path.join(MAGIOKIS_ROOT, self.section, self.subsection + ".html")
-        with open(fn) as fl:
+        fnaam = MAGIOKIS_ROOT / self.section / (self.subsection + ".html")
+        with fnaam.open() as fl:
             data = [x.replace('%xmldatapad', 'http://data.magiokis.nl/') for x in fl]
         return self.build(data)
 
@@ -490,8 +488,9 @@ class VertelPage(Page):
         regels.append('<div style="padding-left: 20%">')
         _, path, id_titels = catlijst("papa", bundel)
         for x in id_titels:
+            path = pathlib.Path(x[2])
             regels.append('<a href="/vertel/{}/{}">{}</a><br />'.format(
-                bundel, '~'.join(os.path.split(x[2])), x[1]))
+                bundel, '~'.join((str(path.parent), path.name)), x[1]))
         regels.append('</div>')
         self.subsection = bundel
         return self.build(regels)
@@ -506,11 +505,11 @@ class VertelPage(Page):
         try:
             pad, naam = itemid.split('~')
         except ValueError:
-            infile = os.path.join(path, itemid)
+            infile = pathlib.Path(path) / itemid
         else:
-            infile = os.path.join(path, pad, naam)
+            infile = pathlib.Path(path) / pad / naam
         self.subsection = 'Verhaal'
-        return self.build(make_tekst_page(infile))
+        return self.build(make_tekst_page(str(infile)))
 
 
 class DichtPage(Page):
@@ -553,9 +552,9 @@ class DichtPage(Page):
     def default(self, jaar):
         """default view voor deze sectie: gedichten uit een bepaald jaar
         """
-        infile = '/home/albert/magiokis/data/Dicht_{}.xml'.format(jaar)
+        infile = MAGIOKIS_ROOT.parent / 'dicht/Dicht_{}.xml'.format(jaar)
         self.subsection = 'Jaarfile'
-        return self.build(make_tekst_page(infile))
+        return self.build(make_tekst_page(str(infile)))
 
 
 class ActeerPage(Page):
@@ -574,8 +573,8 @@ class ActeerPage(Page):
     def play(self, play):
         """default view voor deze sectie: tekst van een toneelstuk
         """
-        shutil.copyfile('/home/albert/magiokis/data/acteer/{}.html'.format(play),
-                        os.path.join(MAGIOKIS_ROOT, 'Act', 'Play.html'))
+        shutil.copyfile(str(MAGIOKIS_ROOT.parent / 'acteer/{}.html').format(play),
+                       str(MAGIOKIS_ROOT / 'Act' / 'Play.html'))
         self.subsection = 'Play'
         return self.get_flatpage()
 
@@ -660,7 +659,7 @@ class BioPage(Page):
         return self.get_flatpage()
 
 root = HomePage()
-cherrypy.tree.mount(root, config=os.path.join(HERE, 'magiokis.conf'))
+cherrypy.tree.mount(root, config=str(HERE / 'magiokis.conf'))
 
 if __name__ == '__main__':
-    cherrypy.quickstart(config=os.path.join(HERE, 'magiokis_local.conf'))
+    cherrypy.quickstart(config=str(HERE / 'magiokis_local.conf'))
