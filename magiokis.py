@@ -7,11 +7,7 @@ import shutil
 import io
 ## import xml.etree.ElementTree as et
 import cherrypy
-
-MAGIOKIS_BASE = pathlib.Path.home() / 'projects/magiokis'
-MAGIOKIS_TOP = MAGIOKIS_BASE / 'main_logic'
-MAGIOKIS_DATA = MAGIOKIS_BASE / 'dml'
-MAGIOKIS_ROOT = pathlib.Path.home() / "magiokis/data/content"
+from magiokis_locs import MAGIOKIS_BASE, MAGIOKIS_TOP, MAGIOKIS_DATA, MAGIOKIS_ROOT
 
 sys.path.append(str(MAGIOKIS_TOP))
 from magiokis_page import denkbank
