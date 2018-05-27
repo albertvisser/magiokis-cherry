@@ -570,7 +570,7 @@ class ActeerPage(Page):
         """default view voor deze sectie: tekst van een toneelstuk
         """
         shutil.copyfile(str(MAGIOKIS_ROOT.parent / 'acteer/{}.html').format(play),
-                       str(MAGIOKIS_ROOT / 'Act' / 'Play.html'))
+                        str(MAGIOKIS_ROOT / 'Act' / 'Play.html'))
         self.subsection = 'Play'
         return self.get_flatpage()
 
